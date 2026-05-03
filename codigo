@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz de Porcentagem</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f5f8;
+      color: #1f2933;
+      line-height: 1.5;
+    }
+
+    header {
+      background: #1f4f8f;
+      color: white;
+      padding: 28px 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    main {
+      width: min(1100px, 94%);
+      margin: 28px auto 48px;
+    }
+
+    .painel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      padding: 18px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      margin-bottom: 22px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .placar {
+      font-weight: bold;
+      color: #1f4f8f;
+    }
+
+    .botao-reset {
+      border: none;
+      background: #1f4f8f;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .botao-reset:hover {
+      background: #173b6c;
+    }
+
+    .grid-questoes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .questao {
+      background: white;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      border: 2px solid transparent;
+    }
+
+    .questao.respondida.correta {
+      border-color: #22c55e;
+    }
+
+    .questao.respondida.errada {
+      border-color: #ef4444;
+    }
+
+    .numero {
+      font-weight: bold;
+      color: #d61f69;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .enunciado {
+      color: #243b67;
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+
+    .alternativas {
+      display: grid;
+      gap: 10px;
+    }
+
+    .alternativa {
+      width: 100%;
+      text-align: left;
+      border: 1px solid #d8dee9;
+      background: #f9fafb;
+      padding: 12px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.98rem;
+      transition: 0.15s ease;
+    }
+
+    .alternativa:hover:not(:disabled) {
+      background: #eef4ff;
+      border-color: #1f4f8f;
+      transform: translateY(-1px);
+    }
+
+    .alternativa:disabled {
+      cursor: not-allowed;
+      opacity: 0.85;
+    }
+
+    .alternativa.escolhida-correta {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .alternativa.escolhida-errada {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+      font-weight: bold;
+    }
+
+    .alternativa.resposta-correta {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-weight: bold;
+    }
+
+    .feedback.correto {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .feedback.errado {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .explicacao {
+      margin-top: 8px;
+      font-weight: normal;
+      color: #374151;
+    }
+
+    footer {
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 800px) {
+      .grid-questoes {
+        grid-template-columns: 1fr;
+      }
+
+      .painel {
+        align-items: flex-start;
+        flex-direction: column;
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Quiz de Porcentagem</h1>
+    <p>Clique em uma alternativa para verificar imediatamente se acertou ou errou.</p>
+  </header>
+
+  <main>
+    <section class="painel" aria-label="Painel de pontuação">
+      <div>
+        <div class="placar" id="placar">Pontuação: 0/0</div>
+        <div id="progresso">Questões respondidas: 0 de 15</div>
+      </div>
+      <button class="botao-reset" type="button" onclick="reiniciarQuiz()">Reiniciar quiz</button>
+    </section>
+
+    <section class="grid-questoes" id="quiz"></section>
+
+    <footer>
+      Material de treino em porcentagem, descontos, aumentos sucessivos, juros e misturas.
+    </footer>
+  </main>
+
+  <script>
+    const questoes = [
+      {
+        enunciado: "Um produto sofreu aumento de 25% e, em seguida, desconto de 20% sobre o novo preço. Após essas duas alterações, o preço final ficou:",
+        alternativas: [
+          "igual ao preço original",
+          "5% maior que o preço original",
+          "5% menor que o preço original",
+          "10% maior que o preço original",
+          "10% menor que o preço original"
+        ],
+        correta: 0,
+        explicacao: "Aumento de 25% equivale a multiplicar por 1,25. Depois, desconto de 20% equivale a multiplicar por 0,80. Como 1,25 × 0,80 = 1, o preço volta ao valor original."
+      },
+      {
+        enunciado: "Um livro, após receber desconto de 15%, passou a custar R$ 76,50. O preço original desse livro era:",
+        alternativas: ["R$ 84,00", "R$ 86,00", "R$ 88,00", "R$ 90,00", "R$ 92,00"],
+        correta: 3,
+        explicacao: "Com desconto de 15%, o preço final corresponde a 85% do original. Assim, 76,50 ÷ 0,85 = 90."
+      },
+      {
+        enunciado: "Um comerciante vendeu uma mercadoria por R$ 450,00, obtendo lucro de 25% sobre o preço de custo. O preço de custo dessa mercadoria foi:",
+        alternativas: ["R$ 320,00", "R$ 340,00", "R$ 360,00", "R$ 375,00", "R$ 400,00"],
+        correta: 2,
+        explicacao: "Venda com lucro de 25% significa que R$ 450,00 corresponde a 125% do custo. Logo, 450 ÷ 1,25 = 360."
+      },
+      {
+        enunciado: "Em uma cidade, a população urbana correspondia a 75% da população total. Em certo período, a população total cresceu 20%, enquanto a população urbana cresceu 32%. A população não urbana, nesse período:",
+        alternativas: ["cresceu 16%", "diminuiu 16%", "permaneceu a mesma", "cresceu 20%", "diminuiu 20%"],
+        correta: 1,
+        explicacao: "Tomando a população inicial como 100, a urbana era 75 e a não urbana 25. A total passa a 120. A urbana cresce 32% e passa a 99. A não urbana passa a 21. Como saiu de 25 para 21, diminuiu 16%."
+      },
+      {
+        enunciado: "Um recipiente contém 2.400 litros de uma mistura com 4% de álcool. Quantos litros de álcool puro devem ser adicionados para que a mistura passe a conter 5% de álcool?",
+        alternativas: ["20", "24", "aproximadamente 25", "aproximadamente 28", "30"],
+        correta: 2,
+        explicacao: "Há 96 litros de álcool na mistura inicial. Adicionando x litros de álcool puro: (96 + x) ÷ (2400 + x) = 0,05. Daí, x ≈ 25,26 litros."
+      },
+      {
+        enunciado: "Uma revista custa R$ 12,00. Em uma promoção, o cliente paga 15 revistas e recebe 18. O desconto percentual sobre o preço unitário é de aproximadamente:",
+        alternativas: ["12,5%", "16,67%", "18%", "20%", "25%"],
+        correta: 1,
+        explicacao: "O cliente paga 15 revistas, mas recebe 18. O preço efetivo por revista é 15/18 do preço original, ou seja, 83,33%. O desconto é de aproximadamente 16,67%."
+      },
+      {
+        enunciado: "Uma loja vende um produto por R$ 960,00 à vista ou por R$ 1.200,00 para pagamento em 30 dias. A taxa de juros cobrada no pagamento em 30 dias é de:",
+        alternativas: ["15%", "20%", "22%", "25%", "30%"],
+        correta: 3,
+        explicacao: "A diferença é de R$ 240,00 sobre o preço à vista de R$ 960,00. Assim, 240 ÷ 960 = 0,25, ou seja, 25%."
+      },
+      {
+        enunciado: "Em uma cidade, 30% dos habitantes não possuíam telefone fixo. Após uma promoção, 2 de cada 7 dessas pessoas passaram a ter telefone fixo. Sabendo que, após a promoção, 12.000 pessoas continuaram sem telefone fixo, a população da cidade é:",
+        alternativas: ["48.000", "50.000", "54.000", "56.000", "60.000"],
+        correta: 3,
+        explicacao: "Continuaram sem telefone 5/7 dos 30% da população. Então 12.000 = (5/7) × 0,30P. Logo, P = 56.000."
+      },
+      {
+        enunciado: "O salário de um funcionário aumentou 10% em janeiro e 15% em julho. O aumento percentual total, em relação ao salário inicial, foi de:",
+        alternativas: ["25%", "25,5%", "26,5%", "27%", "28%"],
+        correta: 2,
+        explicacao: "Os aumentos são sucessivos: 1,10 × 1,15 = 1,265. Portanto, o aumento total foi de 26,5%."
+      },
+      {
+        enunciado: "Um retângulo tem comprimento X e largura Y. Se o comprimento aumentar 20% e a largura aumentar 30%, a área do retângulo aumentará:",
+        alternativas: ["40%", "44%", "50%", "52%", "56%"],
+        correta: 4,
+        explicacao: "A nova área será 1,20X × 1,30Y = 1,56XY. Portanto, a área aumentará 56%."
+      },
+      {
+        enunciado: "Cada medalha pesa entre 375 g e 400 g. Uma delegação conquistou 120 medalhas, e cada medalha contém 2,5% de ouro. Supondo que todas tenham massa máxima, a quantidade de ouro presente nessas medalhas é:",
+        alternativas: ["menor que 0,5 kg", "entre 0,5 kg e 1 kg", "entre 1 kg e 2 kg", "entre 2 kg e 3 kg", "maior que 3 kg"],
+        correta: 2,
+        explicacao: "Com massa máxima, cada medalha tem 400 g. O total é 120 × 400 = 48.000 g. Ouro: 2,5% de 48.000 = 1.200 g, ou seja, 1,2 kg."
+      },
+      {
+        enunciado: "Maria comprou uma blusa e uma saia em promoção. Antes da promoção, a blusa custava R$ 160,00 e a saia custava R$ 180,00. O preço da blusa aumentou 30% e o preço da saia diminuiu 20%. Comprando as duas peças após as alterações, Maria pagou:",
+        alternativas: ["R$ 332,00", "R$ 344,00", "R$ 352,00", "R$ 360,00", "R$ 368,00"],
+        correta: 2,
+        explicacao: "Blusa: 160 × 1,30 = 208. Saia: 180 × 0,80 = 144. Total: 208 + 144 = 352."
+      },
+      {
+        enunciado: "Os bilhetes de uma rifa eram vendidos a R$ 20,00 cada, ou no valor promocional de 4 bilhetes por R$ 60,00. Sabendo que todos os 500 bilhetes foram vendidos e que o valor arrecadado foi de R$ 8.400,00, o número de bilhetes vendidos pelo valor promocional foi:",
+        alternativas: ["240", "280", "300", "320", "360"],
+        correta: 3,
+        explicacao: "Se todos fossem vendidos a R$ 20,00, a arrecadação seria R$ 10.000,00. A diferença foi de R$ 1.600,00. Cada grupo promocional de 4 bilhetes gera desconto de R$ 20,00. Logo, foram 80 grupos promocionais, correspondentes a 320 bilhetes."
+      },
+      {
+        enunciado: "Um capital de R$ 1.000,00 foi aplicado a uma taxa de 20% no primeiro ano. Em seguida, o montante foi aplicado por mais 2 anos a uma taxa anual x, em regime de juros compostos. Ao final dos 3 anos, o montante foi de R$ 1.728,00. A taxa x foi de:",
+        alternativas: ["10%", "15%", "20%", "25%", "30%"],
+        correta: 2,
+        explicacao: "Após o primeiro ano: 1000 × 1,20 = 1200. Depois: 1200 × (1 + x)² = 1728. Assim, (1 + x)² = 1,44, então 1 + x = 1,20. Logo, x = 20%."
+      },
+      {
+        enunciado: "Um produto recebeu dois descontos sucessivos de 10%. Após os descontos, foi vendido por R$ 291,60. O preço original do produto era:",
+        alternativas: ["R$ 320,00", "R$ 330,00", "R$ 340,00", "R$ 350,00", "R$ 360,00"],
+        correta: 4,
+        explicacao: "Dois descontos de 10% equivalem a multiplicar por 0,90 × 0,90 = 0,81. Então, preço original = 291,60 ÷ 0,81 = 360."
+      }
+    ];
+
+    const quiz = document.getElementById("quiz");
+    const placar = document.getElementById("placar");
+    const progresso = document.getElementById("progresso");
+
+    let respondidas = 0;
+    let acertos = 0;
+
+    function letraAlternativa(indice) {
+      return String.fromCharCode(97 + indice) + ")";
+    }
+
+    function montarQuiz() {
+      quiz.innerHTML = "";
+      questoes.forEach((questao, indiceQuestao) => {
+        const artigo = document.createElement("article");
+        artigo.className = "questao";
+        artigo.dataset.questao = indiceQuestao;
+
+        const numero = document.createElement("div");
+        numero.className = "numero";
+        numero.textContent = String(indiceQuestao + 1).padStart(2, "0") + ".";
+
+        const enunciado = document.createElement("p");
+        enunciado.className = "enunciado";
+        enunciado.textContent = questao.enunciado;
+
+        const alternativas = document.createElement("div");
+        alternativas.className = "alternativas";
+
+        questao.alternativas.forEach((textoAlternativa, indiceAlternativa) => {
+          const botao = document.createElement("button");
+          botao.type = "button";
+          botao.className = "alternativa";
+          botao.textContent = `${letraAlternativa(indiceAlternativa)} ${textoAlternativa}`;
+          botao.addEventListener("click", () => responder(indiceQuestao, indiceAlternativa, artigo));
+          alternativas.appendChild(botao);
+        });
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+        feedback.setAttribute("aria-live", "polite");
+
+        artigo.appendChild(numero);
+        artigo.appendChild(enunciado);
+        artigo.appendChild(alternativas);
+        artigo.appendChild(feedback);
+        quiz.appendChild(artigo);
+      });
+
+      atualizarPainel();
+    }
+
+    function responder(indiceQuestao, indiceAlternativa, artigo) {
+      if (artigo.classList.contains("respondida")) return;
+
+      const questao = questoes[indiceQuestao];
+      const botoes = artigo.querySelectorAll(".alternativa");
+      const feedback = artigo.querySelector(".feedback");
+      const acertou = indiceAlternativa === questao.correta;
+
+      botoes.forEach((botao, indice) => {
+        botao.disabled = true;
+
+        if (indice === indiceAlternativa && acertou) {
+          botao.classList.add("escolhida-correta");
+        }
+
+        if (indice === indiceAlternativa && !acertou) {
+          botao.classList.add("escolhida-errada");
+        }
+
+        if (!acertou && indice === questao.correta) {
+          botao.classList.add("resposta-correta");
+        }
+      });
+
+      respondidas++;
+
+      if (acertou) {
+        acertos++;
+        artigo.classList.add("respondida", "correta");
+        feedback.className = "feedback correto";
+        feedback.innerHTML = `Correto. <div class="explicacao">${questao.explicacao}</div>`;
+      } else {
+        artigo.classList.add("respondida", "errada");
+        feedback.className = "feedback errado";
+        feedback.innerHTML = `Errado. A resposta correta é ${letraAlternativa(questao.correta)} <div class="explicacao">${questao.explicacao}</div>`;
+      }
+
+      atualizarPainel();
+    }
+
+    function atualizarPainel() {
+      placar.textContent = `Pontuação: ${acertos}/${respondidas}`;
+      progresso.textContent = `Questões respondidas: ${respondidas} de ${questoes.length}`;
+    }
+
+    function reiniciarQuiz() {
+      respondidas = 0;
+      acertos = 0;
+      montarQuiz();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    montarQuiz();
+  </script>
+</body>
+</html>
