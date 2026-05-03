@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quiz de Porcentagem</title>
   <style>
+    
+    function tocarSom(correta) {
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.frequency.value = correta ? 880 : 220;
+  osc.type = "sine";
+
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.2);
+}
     * {
       box-sizing: border-box;
     }
@@ -324,6 +342,332 @@
         correta: 4,
         explicacao: "Dois descontos de 10% equivalem a multiplicar por 0,90 × 0,90 = 0,81. Então, preço original = 291,60 ÷ 0,81 = 360."
       }
+      ,
+{
+  id: 16,
+  question: "Um produto sofreu aumento de 40% e, em seguida, desconto de 25% sobre o novo preço. Após essas duas alterações, passou a custar R$ 630,00. O preço original era:",
+  options: [
+    "a) R$ 560,00",
+    "b) R$ 600,00",
+    "c) R$ 620,00",
+    "d) R$ 650,00",
+    "e) R$ 700,00"
+  ],
+  answer: "b",
+  explanation: "O preço foi multiplicado por 1,40 e depois por 0,75. Assim, o fator final foi 1,05. Logo, 630 ÷ 1,05 = 600."
+},
+{
+  id: 17,
+  question: "Um comerciante aumentou o preço de um produto em p%. Em razão disso, a quantidade vendida diminuiu também p%. Sabendo que a receita total caiu 4%, o valor de p é:",
+  options: [
+    "a) 10%",
+    "b) 15%",
+    "c) 20%",
+    "d) 25%",
+    "e) 30%"
+  ],
+  answer: "c",
+  explanation: "A receita fica multiplicada por (1 + p)(1 - p) = 1 - p². Como caiu 4%, temos 1 - p² = 0,96. Logo, p² = 0,04 e p = 20%."
+},
+{
+  id: 18,
+  question: "Um recipiente contém 80 litros de uma solução com 30% de sal. Parte da água evapora, sem perda de sal, e a concentração passa a ser de 40%. Quantos litros de água evaporaram?",
+  options: [
+    "a) 15",
+    "b) 20",
+    "c) 24",
+    "d) 28",
+    "e) 30"
+  ],
+  answer: "b",
+  explanation: "Havia 24 litros de sal. Para que 24 litros representem 40% da mistura, o volume total deve ser 60 litros. Logo, evaporaram 20 litros."
+},
+{
+  id: 19,
+  question: "Um capital foi aplicado por um ano à taxa anual de x% e, no ano seguinte, à taxa anual de (x + 10)%, em regime de juros compostos. Ao final dos dois anos, o capital aumentou 32%. O valor de x é:",
+  options: [
+    "a) 10%",
+    "b) 12%",
+    "c) 15%",
+    "d) 18%",
+    "e) 20%"
+  ],
+  answer: "a",
+  explanation: "Temos (1 + x)(1 + x + 0,10) = 1,32. Testando x = 0,10: 1,10 × 1,20 = 1,32. Logo, x = 10%."
+},
+{
+  id: 20,
+  question: "Dois produtos A e B custavam, juntos, certo valor. O produto A sofreu desconto de 30%, enquanto o produto B sofreu aumento de 20%. Após essas alterações, o preço total dos dois produtos permaneceu igual. Antes das alterações, o produto B era:",
+  options: [
+    "a) 20% mais caro que A",
+    "b) 30% mais caro que A",
+    "c) 40% mais caro que A",
+    "d) 50% mais caro que A",
+    "e) 60% mais caro que A"
+  ],
+  answer: "d",
+  explanation: "Se A e B são os preços originais, então 0,70A + 1,20B = A + B. Logo, 0,20B = 0,30A, então B = 1,5A."
+},
+{
+  id: 21,
+  question: "Em uma cidade, a população urbana correspondia a 60% da população total. Em certo período, a população total cresceu 25%, enquanto a população urbana cresceu 10%. A população não urbana cresceu:",
+  options: [
+    "a) 25%",
+    "b) 32,5%",
+    "c) 40%",
+    "d) 45%",
+    "e) 47,5%"
+  ],
+  answer: "e",
+  explanation: "Tomando população inicial 100, a urbana era 60 e a não urbana 40. Depois, o total virou 125 e a urbana virou 66. A não urbana passou a ser 59. O crescimento foi de 19 sobre 40, isto é, 47,5%."
+},
+{
+  id: 22,
+  question: "Um produto recebeu dois descontos sucessivos. O primeiro foi de 20%. Sabendo que os dois descontos equivalem a um único desconto de 32%, o segundo desconto foi de:",
+  options: [
+    "a) 10%",
+    "b) 12%",
+    "c) 15%",
+    "d) 18%",
+    "e) 20%"
+  ],
+  answer: "c",
+  explanation: "Após desconto total de 32%, o produto fica com 68% do preço. Assim, 0,80 × (1 - x) = 0,68. Logo, 1 - x = 0,85 e x = 15%."
+},
+{
+  id: 23,
+  question: "Um lojista marcou o preço de uma mercadoria 40% acima do custo. Ao vender, concedeu desconto de 10% sobre o preço marcado e ainda assim obteve lucro de R$ 78,00. O preço marcado da mercadoria era:",
+  options: [
+    "a) R$ 360,00",
+    "b) R$ 390,00",
+    "c) R$ 420,00",
+    "d) R$ 450,00",
+    "e) R$ 480,00"
+  ],
+  answer: "c",
+  explanation: "Se o custo é C, o preço marcado é 1,40C. Com desconto de 10%, a venda ocorre por 1,26C. O lucro é 0,26C = 78. Logo, C = 300 e o preço marcado é 420."
+},
+{
+  id: 24,
+  question: "O comprimento de um retângulo diminuiu x%, enquanto sua largura aumentou x%. Após essas alterações, a área diminuiu 9%. O valor de x é:",
+  options: [
+    "a) 10%",
+    "b) 20%",
+    "c) 30%",
+    "d) 40%",
+    "e) 45%"
+  ],
+  answer: "c",
+  explanation: "A área fica multiplicada por (1 - x)(1 + x) = 1 - x². Como houve redução de 9%, temos 1 - x² = 0,91. Logo, x² = 0,09 e x = 30%."
+},
+{
+  id: 25,
+  question: "Os bilhetes de uma rifa eram vendidos a R$ 20,00 cada, ou em promoção de 5 bilhetes por R$ 80,00. Sabendo que todos os 600 bilhetes foram vendidos e que a arrecadação total foi de R$ 10.200,00, o número de bilhetes vendidos na promoção foi:",
+  options: [
+    "a) 300",
+    "b) 350",
+    "c) 400",
+    "d) 425",
+    "e) 450"
+  ],
+  answer: "e",
+  explanation: "Sem promoção, a arrecadação seria 600 × 20 = 12.000. Cada grupo promocional de 5 bilhetes reduz a arrecadação em R$ 20,00. A diferença foi 1.800. Logo, foram 90 grupos promocionais, isto é, 450 bilhetes."
+},
+{
+  id: 26,
+  question: "Um capital aplicado a juros compostos dobra de valor em 3 anos. A taxa anual aproximada dessa aplicação é:",
+  options: [
+    "a) 20%",
+    "b) 22%",
+    "c) 24%",
+    "d) 26%",
+    "e) 30%"
+  ],
+  answer: "d",
+  explanation: "Temos (1 + i)³ = 2. Logo, 1 + i = raiz cúbica de 2, aproximadamente 1,26. Assim, i é aproximadamente 26% ao ano."
+},
+{
+  id: 27,
+  question: "Uma liga metálica de 10 kg contém 12% de cobre. Quantos kg de cobre puro devem ser adicionados para que a nova liga contenha 20% de cobre?",
+  options: [
+    "a) 0,5 kg",
+    "b) 1 kg",
+    "c) 1,5 kg",
+    "d) 2 kg",
+    "e) 2,5 kg"
+  ],
+  answer: "b",
+  explanation: "A liga inicial contém 1,2 kg de cobre. Adicionando x kg de cobre puro, temos (1,2 + x)/(10 + x) = 0,20. Resolvendo, x = 1."
+},
+{
+  id: 28,
+  question: "Em um colégio, 40% dos alunos estudavam pela manhã e 60% à tarde. Depois, 15% dos alunos da manhã passaram para o turno da tarde. Após a mudança, o número de alunos da tarde passou a ser, aproximadamente, quantos por cento maior que o da manhã?",
+  options: [
+    "a) 76%",
+    "b) 82%",
+    "c) 88%",
+    "d) 94%",
+    "e) 100%"
+  ],
+  answer: "d",
+  explanation: "Tomando 100 alunos, havia 40 pela manhã e 60 à tarde. 15% de 40 é 6. Depois, ficaram 34 pela manhã e 66 à tarde. A diferença é 32, que representa 32/34, aproximadamente 94%."
+},
+{
+  id: 29,
+  question: "Um produto sofreu dois descontos sucessivos: o primeiro de x% e o segundo de 2x%. Sabendo que o desconto total foi de 28%, o valor de x é:",
+  options: [
+    "a) 8%",
+    "b) 10%",
+    "c) 12%",
+    "d) 14%",
+    "e) 15%"
+  ],
+  answer: "b",
+  explanation: "Temos (1 - x)(1 - 2x) = 0,72. Assim, 1 - 3x + 2x² = 0,72. Resolvendo, x = 0,10, ou seja, 10%."
+},
+{
+  id: 30,
+  question: "Um capital de R$ 2.000,00 aplicado a juros compostos de 10% ao ano, por 2 anos, gera o mesmo montante que outro capital de R$ 2.000,00 aplicado a juros simples, por 2 anos, a uma taxa anual de:",
+  options: [
+    "a) 10%",
+    "b) 10,5%",
+    "c) 11%",
+    "d) 11,5%",
+    "e) 12%"
+  ],
+  answer: "b",
+  explanation: "A juros compostos, o montante é 2000 × 1,1² = 2420. A juros simples: 2000 × (1 + 2i) = 2420. Logo, 1 + 2i = 1,21, então i = 10,5%."
+},
+{
+  id: 31,
+  question: "Um tanque contém 600 litros de combustível com 8% de álcool. Retira-se certa quantidade dessa mistura e repõe-se o mesmo volume com gasolina pura. Após isso, a mistura passa a ter 6% de álcool. Quantos litros foram retirados?",
+  options: [
+    "a) 100",
+    "b) 120",
+    "c) 140",
+    "d) 150",
+    "e) 180"
+  ],
+  answer: "d",
+  explanation: "Havia 48 litros de álcool. Após retirar x litros da mistura, restam 48 × (600 - x)/600 litros de álcool. Isso deve ser igual a 6% de 600, isto é, 36. Logo, x = 150."
+},
+{
+  id: 32,
+  question: "Em uma cidade, 24% dos habitantes não tinham acesso à internet. Após um programa público, 25% dessas pessoas passaram a ter acesso. Se ainda restaram 18.000 habitantes sem internet, a população da cidade é:",
+  options: [
+    "a) 75.000",
+    "b) 80.000",
+    "c) 90.000",
+    "d) 96.000",
+    "e) 100.000"
+  ],
+  answer: "e",
+  explanation: "Os 18.000 correspondem a 75% dos que não tinham internet antes. Logo, antes havia 24.000 sem internet. Como isso representa 24% da população, o total é 100.000."
+},
+{
+  id: 33,
+  question: "Uma revista custa R$ 15,00. Em uma promoção, o cliente paga 10 revistas, recebe 12 e ainda ganha 5% de desconto sobre o valor pago. O desconto efetivo por unidade, em relação ao preço normal de 12 revistas, é de aproximadamente:",
+  options: [
+    "a) 15,0%",
+    "b) 16,7%",
+    "c) 18,5%",
+    "d) 20,8%",
+    "e) 25,0%"
+  ],
+  answer: "d",
+  explanation: "Doze revistas custariam R$ 180,00. Pela promoção, paga-se 10 × 15 = 150, com 5% de desconto, ou seja, R$ 142,50. O desconto é 37,50 sobre 180, aproximadamente 20,8%."
+},
+{
+  id: 34,
+  question: "O lado de um quadrado foi aumentado em x%. Com isso, sua área aumentou 69%. O valor de x é:",
+  options: [
+    "a) 20%",
+    "b) 25%",
+    "c) 30%",
+    "d) 35%",
+    "e) 40%"
+  ],
+  answer: "c",
+  explanation: "Se o lado é multiplicado por 1 + x, a área é multiplicada por (1 + x)². Como a área aumentou 69%, temos (1 + x)² = 1,69. Logo, 1 + x = 1,30 e x = 30%."
+},
+{
+  id: 35,
+  question: "O preço de A é 25% menor que o preço de B. Então, o preço de B é, em relação ao preço de A:",
+  options: [
+    "a) 20% maior",
+    "b) 25% maior",
+    "c) 33,33% maior",
+    "d) 40% maior",
+    "e) 50% maior"
+  ],
+  answer: "c",
+  explanation: "Se A é 25% menor que B, então A = 0,75B. Logo, B = A/0,75 = 1,333A. Portanto, B é 33,33% maior que A."
+},
+{
+  id: 36,
+  question: "Um produto teve dois aumentos sucessivos, de 20% e 25%. Para que o preço volte exatamente ao valor original, deve ser aplicado um desconto de:",
+  options: [
+    "a) 25%",
+    "b) 30%",
+    "c) 33,33%",
+    "d) 37,5%",
+    "e) 40%"
+  ],
+  answer: "c",
+  explanation: "Os aumentos sucessivos geram fator 1,20 × 1,25 = 1,50. Para voltar ao preço original, é preciso multiplicar por 2/3. Logo, o desconto é de 1/3, isto é, 33,33%."
+},
+{
+  id: 37,
+  question: "Dois produtos foram vendidos por R$ 600,00 cada. Em um deles, houve lucro de 20% sobre o custo. No outro, houve prejuízo de 20% sobre o custo. Considerando as duas vendas juntas, houve:",
+  options: [
+    "a) lucro de 4%",
+    "b) prejuízo de 4%",
+    "c) lucro de 5%",
+    "d) prejuízo de 5%",
+    "e) nem lucro nem prejuízo"
+  ],
+  answer: "b",
+  explanation: "No produto com lucro de 20%, o custo era 600/1,2 = 500. No produto com prejuízo de 20%, o custo era 600/0,8 = 750. O custo total foi 1250 e a venda total foi 1200. Houve prejuízo de 50 sobre 1250, isto é, 4%."
+},
+{
+  id: 38,
+  question: "Em uma eleição, 20% dos votos foram brancos ou nulos. Dos votos válidos, um candidato recebeu 52%, totalizando 8.320 votos. O número total de eleitores que votaram foi:",
+  options: [
+    "a) 16.000",
+    "b) 18.000",
+    "c) 19.200",
+    "d) 20.000",
+    "e) 22.000"
+  ],
+  answer: "d",
+  explanation: "Os votos válidos representam 80% do total. O candidato recebeu 52% dos válidos, ou seja, 0,52 × 0,80 = 0,416 do total. Assim, 8.320 corresponde a 41,6% do total. Logo, o total é 20.000."
+},
+{
+  id: 39,
+  question: "Uma grandeza foi reduzida em p% e, depois, aumentada em p%. Ao final, ficou igual a 84% do valor inicial. O valor de p é:",
+  options: [
+    "a) 20%",
+    "b) 25%",
+    "c) 30%",
+    "d) 40%",
+    "e) 45%"
+  ],
+  answer: "d",
+  explanation: "O fator final é (1 - p)(1 + p) = 1 - p². Como ficou em 84%, temos 1 - p² = 0,84. Logo, p² = 0,16 e p = 40%."
+},
+{
+  id: 40,
+  question: "Um comerciante comprou certa quantidade de mercadorias por R$ 8.000,00. Vendeu 60% delas com lucro de 25% e o restante com prejuízo de 10%. O lucro percentual total foi de:",
+  options: [
+    "a) 9%",
+    "b) 10%",
+    "c) 11%",
+    "d) 12%",
+    "e) 15%"
+  ],
+  answer: "c",
+  explanation: "60% do custo corresponde a R$ 4.800, vendidos com lucro de 25%, gerando R$ 6.000. Os 40% restantes custaram R$ 3.200 e foram vendidos com prejuízo de 10%, gerando R$ 2.880. A venda total foi R$ 8.880. O lucro foi R$ 880 sobre R$ 8.000, isto é, 11%."
+}
     ];
 
     const quiz = document.getElementById("quiz");
@@ -409,10 +753,17 @@
         artigo.classList.add("respondida", "correta");
         feedback.className = "feedback correto";
         feedback.innerHTML = `Correto. <div class="explicacao">${questao.explicacao}</div>`;
+        if (selectedAnswer === question.answer) {
+  tocarSom(true);
+  // resto do código de resposta correta
       } else {
         artigo.classList.add("respondida", "errada");
         feedback.className = "feedback errado";
         feedback.innerHTML = `Errado. A resposta correta é ${letraAlternativa(questao.correta)} <div class="explicacao">${questao.explicacao}</div>`;
+          } else {
+  tocarSom(false);
+  // resto do código de resposta errada
+}
       }
 
       atualizarPainel();
@@ -429,7 +780,6 @@
       montarQuiz();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-
     montarQuiz();
   </script>
 </body>
